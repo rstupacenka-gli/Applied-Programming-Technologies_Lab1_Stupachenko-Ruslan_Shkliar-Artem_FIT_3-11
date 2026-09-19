@@ -1,12 +1,9 @@
 #include <iostream>
 #include <memory>
-#include <Windows.h> 
 #include "shared_types.h"
 
 int main()
 {
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
     auto data = std::make_shared<const InputData>(InputData{
         .A = {
             {4.0, 1.0, 2.0},
@@ -19,13 +16,30 @@ int main()
     auto resultA = calculateA(data);
     auto [valueA, iterationsA, residualA, timeA] = *resultA;
 
-    std::cout << "Метод Гауса (Студент А)\n";
+    std::cout << "Gauss method (Student A)\n";
     for (std::size_t i = 0; i < valueA.size(); ++i)
     {
         std::cout << "  x[" << i << "] = " << valueA[i] << '\n';
     }
-    std::cout << "Норма нев'язки:: " << residualA << '\n';
-    std::cout << "Час виконання:: " << timeA << " ms\n";
+    std::cout << "Residual norm: " << residualA << '\n';
+    std::cout << "Execution time: " << timeA << " ms\n\n";
+
+    auto resultB = calculateB(data);
+    auto [valueB, iterationsB, residualB, timeB] = *resultB;
+
+    std::cout << "Simple iterations method (Student B)\n";
+    for (std::size_t i = 0; i < valueB.size(); ++i)
+    {
+        std::cout << "  x[" << i << "] = " << valueB[i] << '\n';
+    }
+    std::cout << "Iterations: " << iterationsB << '\n';
+    std::cout << "Residual norm: " << residualB << '\n';
+    std::cout << "Execution time: " << timeB << " ms\n\n";
+
+    std::cout << "Comparison\n";
+    std::cout << "  Residual norm difference: " << std::abs(residualA - residualB) << '\n';
+    std::cout << "  Time Gauss: " << timeA << " ms\n";
+    std::cout << "  Time Iterations: " << timeB << " ms\n";
 
     return 0;
 }
